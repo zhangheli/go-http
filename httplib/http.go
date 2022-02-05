@@ -18,7 +18,6 @@ var (
 func Get(target string) *lib.BeegoHTTPRequest {
 	m, _ := url.Parse(target)
 	host := m.Host
-	// return lib.Get(NewUrl(m)).SetHost(host)
 	return HandleReturn(lib.Get(NewUrl(m)), host)
 }
 
@@ -41,13 +40,12 @@ func NewUrl(target *url.URL) string {
 		}
 	}
 
-	// ip_list, err := net.LookupIP(target.Host)
-	ip_list, err := ReSolver.LookupHost(context.Background(), target.Host)
+	ip_list, err := ReSolver.LookupIP(context.Background(), "ip4", target.Host)
 	if err != nil || len(ip_list) <= 0 {
 		return target.String()
 	}
 	ip := ip_list[rand.Intn(len(ip_list))]
-	target.Host = ip
+	target.Host = ip.String()
 	return target.String()
 }
 
