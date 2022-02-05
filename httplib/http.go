@@ -10,12 +10,14 @@ import (
 
 func Get(target string) *lib.BeegoHTTPRequest {
 	m, _ := url.Parse(target)
-	return lib.Get(NewUrl(m)).Header("Host", m.Host)
+	host := m.Host
+	return lib.Get(NewUrl(m)).Header("Host", host)
 }
 
 func Post(target string) *lib.BeegoHTTPRequest {
 	m, _ := url.Parse(target)
-	return lib.Post(NewUrl(m)).Header("Host", m.Host)
+	host := m.Host
+	return lib.Post(NewUrl(m)).Header("Host", host)
 }
 
 func NewUrl(target *url.URL) string {
