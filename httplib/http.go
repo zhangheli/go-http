@@ -28,6 +28,13 @@ func Post(target string) *lib.BeegoHTTPRequest {
 }
 
 func NewUrl(target *url.URL) string {
+	return NewUrlWithDNS(target, "ip4", "114.114.114.114:53")
+}
+
+// NewUrlWithDNS
+// ipProtocal -> "ip", "ip4", "ip6"
+// dns -> 8.8.8.8:53
+func NewUrlWithDNS(target *url.URL, ipProtocal, dns string) string {
 	if ReSolver == nil {
 		ReSolver = &net.Resolver{
 			PreferGo: true,
@@ -35,12 +42,12 @@ func NewUrl(target *url.URL) string {
 				d := net.Dialer{
 					Timeout: 10 * time.Second,
 				}
-				return d.DialContext(ctx, "udp", "114.114.114.114:53")
+				return d.DialContext(ctx, "udp", dns)
 			},
 		}
 	}
 
-	ip_list, err := ReSolver.LookupIP(context.Background(), "ip4", target.Host)
+	ip_list, err := ReSolver.LookupIP(context.Background(), ipProtocal, target.Host)
 	if err != nil || len(ip_list) <= 0 {
 		return target.String()
 	}
